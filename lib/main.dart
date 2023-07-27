@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/views/login_view.dart';
+import 'package:mynotes/views/register_view.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -13,6 +14,10 @@ void main() {
         useMaterial3: true,
       ),
       home: const HomePage(),
+      routes: {
+        '/login/':(context) => const LoginView(title: 'hello',),
+        '/register/':(context) => const RegisterView(), 
+      },
     ));
 }
 
@@ -22,36 +27,25 @@ class HomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:  Text('Home' ),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.blue,
-        shadowColor: Colors.black,
-        elevation: 2.5,
-        
-      ),
-      body: FutureBuilder(
+    return FutureBuilder(
         future: Firebase.initializeApp(
                 options: DefaultFirebaseOptions.currentPlatform,
               ),
          builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-           final user = FirebaseAuth.instance.currentUser;
-           if(user?.emailVerified ?? false){
-            print ('You are verified');
-           }
-           else{
-            print('You need to verify your email first');
-           }
-           return Text('Done');
-            default:  
-            return const Text('Loading...');
-          }
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+            //   final user = FirebaseAuth.instance.currentUser;
+            // if(user?.emailVerified ?? false){
+            //   return  const Text('Done');
+            // }else{
+            //   return VerifyEmailView();
+            // }
+            return LoginView(title: 'hello',);
+              default:  
+                return const CircularProgressIndicator();
+            }
+          // return const Text('     OUT...');
          }
-      ),
-    );
+      );
   }
 }
-
